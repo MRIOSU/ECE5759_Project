@@ -6,8 +6,8 @@ restoredefaultpath
 addpath(genpath('./Functions'));
 
 % parmaters for coil sensitivity map
-p.mthd   = 1; %'1' espirit, '2' Walsh
-p.fil    = [6,6,6];  % size of kernal for eSPIRiT or size of filter for 'Walsh'; use [6,6,6] for eSPIRiT and [3,1,1] for Walsh
+p.mthd = 1;
+p.fil    = [6,6,6];  % size of kernal for eSPIRiT
 p.ACSsz  = [128,96,30]; % size of the k-space block used for eSPIRiT
 p.eSRT   = 0.95;
 p.fixeSRTsig = []; % fixed sigular value threshold (just for debug, set empty when running)
@@ -37,12 +37,11 @@ for k = 1:size(cellstr(fileName),2)
     nCH = 12;
     kData = coil_compression(kData, nCH);
     
-    %% define the operator A
     % calculate coil sensitivity maps
     tic;[S,x0]  = coilSen(kData, p);toc
     PHS = size(kData, 5);
     x0  = repmat(x0,[1 1 1 1 PHS]);%Insert frame dim
-    x0  = x0 + 0.010*max(abs(x0(:)))*randn(size(x0)); % inital image guess
+    x0  = randn(size(x0)); % inital image guess
     [y, p.A, p.At]= sensor_operator(kData, S);
     
     %% recon fully sampled dataset A^T(y) (reference)
@@ -55,7 +54,6 @@ for k = 1:size(cellstr(fileName),2)
     
     %% downsampling
     E1 = size(kData,2); FR = size(kData,5);
-    R = 4; %retrospective downsampling factor
     
     %% uniform sampling (parall imaging)
     for R = 2:2:6
@@ -89,7 +87,7 @@ for k = 1:size(cellstr(fileName),2)
         for rep = 1:2
             cine_display(xHat_uniform(:,:,:,:,:,3));
         end
-        xHat_inv = R*p.At(y);
+        xHat_inv = p.At(y);
         display_recon_image(xHat_IFFT, cat(6,xHat_inv, xHat_uniform), 11);
     end
     
@@ -111,7 +109,7 @@ for k = 1:size(cellstr(fileName),2)
         L1 = powerIter(p.A, p.At, size(x0));
         p.L1 = L1*2.05;
         p.iteration = 150;
-        p.lambda = 0.5*10^5*scale_factor;
+        p.lambda = 0.5;
         RMSE_random = zeros(p.iteration, 3);
         xHat_random = zeros([size(x0),3]);
         for method = 1:3
@@ -131,14 +129,18 @@ for k = 1:size(cellstr(fileName),2)
     end
     
     % find optimal lambda
-%     p.iteration = 150;
-%     RMSE_CS = zeros(p.iteration, 9);
+%     p.iteration = 100;
+%     RMSE_CS = zeros(p.iteration, 7);
 %     i = 1;
-%     for scale_factor = 2.^[-4:4]
-%         p.lambda = 0.5*10^5*scale_factor;
+%     for scale_factor = 2.^[-3:3]
+%         p.lambda = 0.5*scale_factor;
 %         % ISTA reconstruction
-%         method = 1;
+%         method = 3;
 %         [xHat_ISTA, RMSE_CS(:,i)] = GD_CS(y, randn(size(x0)), p, method);
+% %         figure;
+% %         for rep = 1:2
+% %             cine_display(xHat_ISTA);
+% %         end        
 %         i = i + 1;
 %     end
     
