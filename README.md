@@ -3,7 +3,7 @@
 
 #### Project report: https://github.com/MRIOSU/ECE5759_Project/blob/main/ECE5759_Project_Chen.pdf
 ## Parallel imaging (SENSE based)
-Modeled as Least square problem. The gradient method (GM), fast GM (GM) and optimized GM (OGM) were compared.
+Modeled as Least square problem. The gradient method (GM), fast GM (FGM) and optimized GM (OGM) were compared.
 
 <img src="https://github.com/MRIOSU/ECE5759_Project/blob/main/Results/unifrom_samp.png" width="500">
 
