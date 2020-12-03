@@ -1,4 +1,4 @@
-# Optimization methods in cardiac MRI （ECE 5759 Final Project）
+# Optimization methods in cardiac MRI （ECE5759 Final）
 ### In this project, I implemented and compared several optimization methodes for parallel imaging and compressive sensing in cardiac MRI. The numerical results are as expected: the momentum term and over-relaxation term can accelerate the convergence significantly with negligible additional computation.
 ## Parallel imaging (SENSE based)
 Least square problem
