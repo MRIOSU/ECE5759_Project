@@ -77,7 +77,7 @@ for k = 1:size(cellstr(fileName),2)
         RMSE_uniform = zeros(p.iteration, 3);
         xHat_uniform = zeros([size(x0),3]);
         for method = 1:3
-            [xHat_uniform(:,:,:,:,:,method), RMSE_uniform(:,method)] = GD_SENSE(y, randn(size(x0)), p, method);
+            [xHat_uniform(:,:,:,:,:,method), RMSE_uniform(:,method)] = solver_PI(y, randn(size(x0)), p, method);
         end
         iter_step = 3; iter_x = 1:iter_step:size(RMSE_uniform,1);
         figure; plot(iter_x, RMSE_uniform(1:iter_step:end,1),'*-'); hold on; plot(iter_x, RMSE_uniform(1:iter_step:end,2),'d-'); plot(iter_x, RMSE_uniform(1:iter_step:end,3),'o-'); lgd = legend('GM','FGM','OGM');
@@ -113,7 +113,7 @@ for k = 1:size(cellstr(fileName),2)
         RMSE_random = zeros(p.iteration, 3);
         xHat_random = zeros([size(x0),3]);
         for method = 1:3
-            tic;[xHat_random(:,:,:,:,:,method), RMSE_random(:,method)] = GD_CS(y, randn(size(x0)), p, method);toc;
+            tic;[xHat_random(:,:,:,:,:,method), RMSE_random(:,method)] = solver_CS(y, randn(size(x0)), p, method);toc;
             disp('-------------')
         end
         iter_step = 3; iter_x = 1:iter_step:size(RMSE_random,1);
@@ -136,7 +136,7 @@ for k = 1:size(cellstr(fileName),2)
 %         p.lambda = 0.5*scale_factor;
 %         % ISTA reconstruction
 %         method = 3;
-%         [xHat_ISTA, RMSE_CS(:,i)] = GD_CS(y, randn(size(x0)), p, method);
+%         [xHat_ISTA, RMSE_CS(:,i)] = solver_CS(y, randn(size(x0)), p, method);
 % %         figure;
 % %         for rep = 1:2
 % %             cine_display(xHat_ISTA);
