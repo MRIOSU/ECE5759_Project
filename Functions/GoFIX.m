@@ -1,5 +1,6 @@
 function [samp] = GoFIX(PE, FR, R)
-% GRO sampling pattern, Rizwan.Ahmad@osumc.edu
+% GRO sampling pattern
+% Author: Rizwan.Ahmad@osumc.edu
 
 %% Essential paramters
 n = round(PE/R);   % Number of PE lines per frame
