@@ -44,7 +44,7 @@ for k = 1:size(cellstr(fileName),2)
     x0  = randn(size(x0)); % inital image guess
     [y, p.A, p.At]= sensor_operator(kData, S);
     
-    %% recon fully sampled dataset A^T(y) (reference)
+    %% recon fully sampled dataset A^H(y) (reference)
     xHat_IFFT = p.At(y);
     figure;
     for rep = 1:3
@@ -75,7 +75,7 @@ for k = 1:size(cellstr(fileName),2)
             p.iteration = 150;
         end
         % SENSE reconstruction
-        % define operator A and At
+        % define the operators A and A^H
         [y, p.A, p.At]= sensor_operator(DataIn_uniform, S);
         % Lipschitz constant
         L1 = powerIter(p.A, p.At, size(x0));
@@ -93,7 +93,7 @@ for k = 1:size(cellstr(fileName),2)
         grid on; set(gcf, 'Position', [680   698   367   280]);
         figure;
         for rep = 1:2
-            cine_display(xHat_uniform(:,:,:,:,:,3));
+            cine_display(xHat_uniform(:,:,:,:,:,3)); % display the cine images
         end
         % show the reconstructed image (systolic frame) and error map
         xHat_inv = p.At(y); % zero-filling recon
@@ -111,7 +111,7 @@ for k = 1:size(cellstr(fileName),2)
         % show the sampling pattern
         figure;subplot(1,3,1:2);imagesc(repmat(rot90(squeeze(random_sampling(:,:,1,1,1,1,1))),[1 size(kData,1)]));  colormap(gray);xlabel('kx','FontSize',14); ylabel('ky','FontSize',14)
         subplot(1,3,3);imagesc(squeeze(random_sampling));  colormap(gray); xlabel('t','FontSize',14); ylabel('ky','FontSize',14)
-        
+        % CS reconstruction
         % define the operator A~ and (A~)^H
         dim_phase = 5;
         [y, p.A, p.At]= sensor_operator(DataIn_random, S);
@@ -123,7 +123,6 @@ for k = 1:size(cellstr(fileName),2)
         % number of iteration and regulirazation strength
         p.iteration = 150;
         p.lambda = 0.5;
-        % CS reconstruction
         % Run the recon
         RMSE_random = zeros(p.iteration, 3);
         xHat_random = zeros([size(x0),3]);
