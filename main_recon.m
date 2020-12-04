@@ -53,9 +53,7 @@ for k = 1:size(cellstr(fileName),2)
     end
     p.xRef = xHat_IFFT;
     
-    %% downsampling
-    E1 = size(kData,2); FR = size(kData,5);
-    
+    E1 = size(kData,2); FR = size(kData,5); 
     %% uniform sampling (parall imaging)
     for R = 2:2:6
         % generate the sampling pattern
