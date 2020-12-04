@@ -41,10 +41,11 @@ for k = 1:size(cellstr(fileName),2)
     tic;[S,x0]  = coilSen(kData, p);toc
     PHS = size(kData, 5);
     x0  = repmat(x0,[1 1 1 1 PHS]);%Insert frame dim, time-averaged image
-    x0  = randn(size(x0)); % inital image guess
-    [y, p.A, p.At]= sensor_operator(kData, S);
-    
+    x0  = randn(size(x0)); % inital image guess, random matrix
+
     %% recon fully sampled dataset A^H(y) (reference)
+    % define the operators A and A^H
+    [y, p.A, p.At]= sensor_operator(kData, S);
     xHat_IFFT = p.At(y);
     figure;
     for rep = 1:3
@@ -85,6 +86,7 @@ for k = 1:size(cellstr(fileName),2)
         xHat_uniform = zeros([size(x0),3]);
         for method = 1:3 % 1.GM; 2. FGM; 3. OGM
             [xHat_uniform(:,:,:,:,:,method), RMSE_uniform(:,method)] = solver_PI(y, randn(size(x0)), p, method);
+            disp('-------------');
         end
         % show the convergence curves
         iter_step = 3; iter_x = 1:iter_step:size(RMSE_uniform,1);
